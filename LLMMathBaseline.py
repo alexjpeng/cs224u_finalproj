@@ -18,14 +18,17 @@ class LLMMathBaseline:
     self.agent = initialize_agent(tools, llm, return_intermediate_steps=True, agent="zero-shot-react-description", verbose=True)
 
   def query(self, q, context, llm_answer=True):
-    response = self.agent({'input': 'Context: \n'+ context + 'Question: ' + q + '\n Think step by step, calculate using the calculator, and then give the final answer as a number'})
-    log=response['intermediate_steps'][0][0].log#[response['intermediate_steps'].index('Action Input: ') + len('Action Input: ') : ]
-    formula = log[log.index('Action Input: ') + len('Action Input: ') :]
-    answer = response['intermediate_steps'][0][1][len('Answer: '):]
+    try:
+      response = self.agent({'input': 'Context: \n'+ context + 'Question: ' + q + '\n Think step by step, calculate using the calculator, and then give the final answer as a number'})
+      log=response['intermediate_steps'][0][0].log#[response['intermediate_steps'].index('Action Input: ') + len('Action Input: ') : ]
+      formula = log[log.index('Action Input: ') + len('Action Input: ') :]
+      answer = response['intermediate_steps'][0][1][len('Answer: '):]
 
-    if llm_answer:
-      answer = response['output']
-    
-    return {'answer': answer, 'program': formula}
+      if llm_answer:
+        answer = response['output']
+      
+      return {'answer': answer, 'program': formula}
+    except:
+      return {'answer': 'No answer found', 'program': 'No program found'}
 
 
