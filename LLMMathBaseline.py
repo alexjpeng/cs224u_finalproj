@@ -1,5 +1,5 @@
 import os
-os.environ["OPENAI_API_KEY"] = "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"
+#set openai key here
 os.environ["WOLFRAM_ALPHA_APPID"] = "6H373X-YPKAWG355X"
 
 from langchain.agents import load_tools, initialize_agent
